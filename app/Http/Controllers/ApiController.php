@@ -8,5 +8,8 @@ use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
-
+    public function recibirInfoFacebook(Request $request)
+    {
+        return response()->json($request->input());
+    }
 }
