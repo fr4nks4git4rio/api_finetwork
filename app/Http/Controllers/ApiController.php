@@ -33,7 +33,7 @@ class ApiController extends Controller
         } catch (GuzzleException $e) {
 //            return $e->getMessage();
             Log::error($e->getMessage());
-            return response()->json(['success' => false, 'response' => 'No se pudo comunicar con el servicio. Intentelo mas tarde.']);
+            return response()->json(['success' => false, 'response' => 'No se pudo comunicar con el servicio. Intentelo mas tarde. Error: '.$e->getMessage()]);
         }
 
         Log::info("Petición correcta!");
@@ -49,8 +49,8 @@ class ApiController extends Controller
             $r = $this->http->get($url, ['auth' => ['artemisa_leads', 'Rki4yjLk^L%8']]);
         } catch (GuzzleException $e) {
 //            return $e->getMessage();
-            Log::error($e->getMessage());
-            return response()->json(['success' => false, 'response' => 'No se pudo comunicar con el servicio. Intentelo mas tarde.']);
+            Log::info($e->getMessage());
+            return response()->json(['success' => false, 'response' => 'No se pudo comunicar con el servicio. Intentelo mas tarde. Error: '.$e->getMessage()]);
         }
 
         Log::info("Petición correcta!");
