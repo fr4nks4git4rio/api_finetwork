@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class ApiController extends Controller
 {
-    private $host = 'https://wss.bpodigital.com/llama_finetwork.php?';
+    private $host = 'https://lepho20.aviloncenter.com/Artemisa/leads.php?';
     private $http;
 
     /**
@@ -22,21 +22,28 @@ class ApiController extends Controller
     {
         $this->http = $http;
     }
+
     public function recibirInfoFacebook(Request $request)
     {
-        $input = $request->input();
+        if (is_string($request->data))
+            $input = json_decode($request->data, true);
+        else
+            $input = $request->data;
         $url = $this->host;
         Log::info("Data Recibida de Facebook");
         Log::info($input);
-        $url .= 'phone='.$input['data']['phone'].'&name='.$input['data_exten']['name'].'&email='.$input['data_exten']['email'];
+        $url .= 'phone=' . $input['data']['phone'] . '&name=' . $input['data']['name'] . '&email=' . $input['data']['email'] . '&';
+        $url .= 'id_cargue=85';
 
-        try{
+        try {
             $r = $this->http->get($url, ['auth' => ['artemisa_leads', 'Rki4yjLk^L%8']]);
-        }catch (GuzzleException $e){
-//      return $this->sendError($e->getMessage());
-            return json_encode(['error' => 'No se pudo comunicar con el servicio. Inténtelo mas tarde.']);
+        } catch (GuzzleException $e) {
+//            return $e->getMessage();
+            Log::error($e->getMessage());
+            return response()->json(['success' => false, 'response' => 'No se pudo comunicar con el servicio. Intentelo mas tarde.']);
         }
 
-        return json_encode(['success' => true, 'response' => 'ok']);
+        Log::info("Petición correcta!");
+        return response()->json(['success' => true, 'response' => 'ok']);
     }
 }
