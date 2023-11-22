@@ -57,6 +57,23 @@ class ApiController extends Controller
         return response()->json(['success' => true, 'response' => 'ok']);
     }
 
+    public function recibirInfoFacebookDonsorteoIfttt(Request $request)
+    {
+        $url = $this->prepareData2($request);
+        $url .= 'id_cargue=85';
+
+        try {
+            $r = $this->http->get($url, ['auth' => ['artemisa_leads', 'Rki4yjLk^L%8']]);
+        } catch (GuzzleException $e) {
+//            return $e->getMessage();
+            Log::info($e->getMessage());
+            return response()->json(['success' => false, 'response' => 'No se pudo comunicar con el servicio. Intentelo mas tarde. Error: '.$e->getMessage()]);
+        }
+
+        Log::info("Petición correcta!");
+        return response()->json(['success' => true, 'response' => 'ok']);
+    }
+
     /**
      * @param Request $request
      * @return string
@@ -71,6 +88,19 @@ class ApiController extends Controller
         Log::info("Data Recibida de Facebook");
         Log::info($input);
         $url .= 'phone=' . $input['data']['phone'] . '&name=' . $input['data']['name'] . '&email=' . $input['data']['email'] . '&';
+        return $url;
+    }
+
+    private function prepareData2(Request $request): string
+    {
+        if (is_string($request->data))
+            $input = json_decode($request->data, true);
+        else
+            $input = $request->data;
+        $url = $this->host;
+        Log::info("Data Recibida de Facebook");
+        Log::info($input);
+        $url .= 'full_name=' . $input[0]['values'][0] . '&phone_number=' . $input[1]['values'][0] . '&email=' . $input[2]['values'][0] . '&codigopostal=' . $input[3]['values'][0] . '&';
         return $url;
     }
 }

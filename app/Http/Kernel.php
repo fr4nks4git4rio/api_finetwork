@@ -2,7 +2,8 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\CheckToken;
+use App\Http\Middleware\CheckToken1;
+use App\Http\Middleware\CheckToken2;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -43,8 +44,7 @@ class Kernel extends HttpKernel
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            CheckToken::class
+            \Illuminate\Routing\Middleware\SubstituteBindings::class
         ],
     ];
 
@@ -69,5 +69,7 @@ class Kernel extends HttpKernel
         'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
         'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',
         'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
+        'checkToken1' => CheckToken1::class,
+        'checkToken2' => CheckToken2::class
     ];
 }

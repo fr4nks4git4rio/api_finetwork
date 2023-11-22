@@ -20,6 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/recibir_info_facebook', [ApiController::class, 'recibirInfoFacebook']);
+Route::middleware(['checkToken1'])->group(function (){
+    Route::post('/recibir_info_facebook', [ApiController::class, 'recibirInfoFacebook']);
 
-Route::post('/recibir_info_facebook_repsol', [ApiController::class, 'recibirInfoFacebookRepsol']);
+    Route::post('/recibir_info_facebook_repsol', [ApiController::class, 'recibirInfoFacebookRepsol']);
+});
+
+Route::middleware(['checkToken2'])->group(function (){
+    Route::post('/recibir_info_facebook_donsorteo_ifttt', [ApiController::class, 'recibirInfoFacebookDonsorteoIfttt']);
+});
